@@ -7,13 +7,13 @@ if (require('electron-squirrel-startup')) {
 
 const createWindow = () => {
     const mainWindow = new BrowserWindow({
-        width: 800,
+        width: 650,
         height: 500,
     })
 
     mainWindow.loadFile(path.join(__dirname, 'index.html'))
 
-    mainWindow.webContents.openDevTools({ detach: true })
+    mainWindow.webContents.openDevTools({ mode: 'detach' })
 }
 
 app.on('ready', createWindow)
