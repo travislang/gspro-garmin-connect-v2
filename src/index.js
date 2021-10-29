@@ -21,6 +21,7 @@ const startApp = () => {
         webPreferences: {
             contextIsolation: true,
             preload: path.join(__dirname, 'preload.js'),
+            nativeWindowOpen: true,
         },
     })
 
@@ -29,16 +30,19 @@ const startApp = () => {
 
     const { port1, port2 } = new MessageChannelMain()
 
-    port2.on('message', (event) => {
-        console.log('from renderer main world:', event.data)
-    })
-
     port2.start()
 
     const gsProConnect = new GsProConnect(port2)
     const garminConnect = new GarminConnect(port2, gsProConnect)
 
     mainWindow.webContents.postMessage('main-port', null, [port1])
+
+    mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+        if (url.startsWith('https://travislang.io')) {
+            require('electron').shell.openExternal(url)
+        }
+        return { action: 'deny' }
+    })
 }
 
 app.on('ready', startApp)
