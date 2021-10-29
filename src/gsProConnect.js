@@ -23,14 +23,14 @@ class GsProConnect {
             type: 'gsProMessage',
             message: 'Trying to connect to GSPro...',
         })
-        setTimeout(() => this.handleConnection(), 1000)
-        // this.socket = net.createConnection(
-        //     {
-        //         address: process.env.IP_ADDRESS,
-        //         port: process.env.PORT,
-        //     },
-        //     this.handleConnection
-        // )
+
+        this.socket = net.createConnection(
+            {
+                address: process.env.IP_ADDRESS,
+                port: process.env.PORT,
+            },
+            this.handleConnection
+        )
     }
 
     handleDisconnect() {
@@ -64,29 +64,29 @@ class GsProConnect {
             level: 'success',
         })
 
-        // this.socket.setEncoding('UTF8')
+        this.socket.setEncoding('UTF8')
 
-        // this.socket.on('error', (e) => {
-        //     console.log('error with gspro socket', e)
-        //     this.ipcPort.postMessage({
-        //         type: 'GSProMessage',
-        //         message: 'Error with GSPro connection.  Trying to reconnect...',
-        //     })
-        // })
+        this.socket.on('error', (e) => {
+            console.log('error with gspro socket', e)
+            this.ipcPort.postMessage({
+                type: 'GSProMessage',
+                message: 'Error with GSPro connection.  Trying to reconnect...',
+            })
+        })
 
-        // this.socket.on('close', (hadError) => {
-        //     console.log('gsPro connection closed.  Had error: ', hadError)
-        //     this.handleDisconnect()
-        // })
+        this.socket.on('close', (hadError) => {
+            console.log('gsPro connection closed.  Had error: ', hadError)
+            this.handleDisconnect()
+        })
 
-        // this.socket.on('data', (data) => {
-        //     try {
-        //         const dataObj = JSON.parse(data)
-        //         console.log('incoming message from gsPro:', dataObj)
-        //     } catch (e) {
-        //         console.log('error parsing incoming gsPro message', e)
-        //     }
-        // })
+        this.socket.on('data', (data) => {
+            try {
+                const dataObj = JSON.parse(data)
+                console.log('incoming message from gsPro:', dataObj)
+            } catch (e) {
+                console.log('error parsing incoming gsPro message', e)
+            }
+        })
     }
 
     sendMessage(payload) {
