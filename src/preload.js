@@ -1,16 +1,17 @@
-const { contextBridge } = require('electron')
+const { contextBridge, ipcRenderer } = require('electron')
 
-contextBridge.exposeInMainWorld('myAPI', {
-    desktop: true,
+const { localIP } = require('./helpers/helpers.js')
+
+contextBridge.exposeInMainWorld('mainAPI', {
+    localIP,
 })
 
-window.addEventListener('DOMContentLoaded', () => {
-    const replaceText = (selector, text) => {
-        const element = document.getElementById(selector)
-        if (element) element.innerText = text
-    }
+const windowLoaded = new Promise((resolve) => {
+    window.onload = resolve
+})
 
-    for (const dependency of ['chrome', 'node', 'electron']) {
-        replaceText(`${dependency}-version`, process.versions[dependency])
-    }
+ipcRenderer.on('main-port', async (event) => {
+    await windowLoaded
+
+    window.postMessage('main-port', '*', event.ports)
 })

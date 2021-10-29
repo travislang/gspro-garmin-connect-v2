@@ -25,11 +25,11 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+    align-items: flex-start;
 }
 
 .status-container {
     display: flex;
-    height: 35px;
     align-items: center;
     flex-direction: row;
     justify-content: center;
@@ -38,23 +38,30 @@ body {
     border-radius: 5px;
 }
 
+.status-text-container {
+    margin-right: 10px;
+}
+
 .status-title {
     font-size: 14px;
-    margin-right: 10px;
     color: rgb(205, 205, 205);
+    margin-bottom: 3px;
+}
+
+.status-status {
+    font-size: 10px;
+    color: rgb(114, 112, 112);
 }
 
 .status-icon {
-    width: 14px;
-    height: 14px;
-    border-radius: 7px;
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    margin: 0px 5px;
 }
 
 .status-color-green {
     background-color: rgb(12, 218, 12);
-}
-.status-color-orange {
-    background-color: rgb(237, 176, 22);
 }
 .status-color-yellow {
     background-color: rgb(233, 216, 30);
@@ -86,21 +93,46 @@ body {
 }
 
 .messages-window {
+    position: relative;
     padding: 10px;
+    padding-bottom: 0px;
+    padding-left: 10px;
     border: 1px solid #767676;
     border-radius: 5px;
     margin: 50px;
     width: 500px;
-    height: 200px;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+}
+
+.messages-window-overlay {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0) 30%, rgb(50, 50, 50) 100%);
 }
 
 .message-text {
-    font-size: 10px;
+    font-size: 11px;
     margin-bottom: 5px;
     color: rgb(205, 205, 205);
+}
+
+.message-text-green {
+    color: rgb(106, 205, 36);
+}
+
+.message-text-red {
+    color: rgb(204, 91, 43);
 }
 
 .message-text-title {
     color: rgb(145, 145, 145);
     font-weight: bold;
+    margin-right: 11px;
 }

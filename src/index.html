@@ -9,28 +9,44 @@
     <body>
         <div class="app-container">
             <div class="status-container-wrapper">
-                <div class="status-container">
-                    <p class="status-title">GS Pro API Connection</p>
-                    <div class="status-icon status-color-yellow"></div>
+                <div id="gspro" class="status-container">
+                    <div class="status-text-container">
+                        <p class="status-title">GSPro API Connection</p>
+                        <p class="status-status">Disconnected</p>
+                    </div>
+                    <div class="status-icon status-color-red"></div>
                 </div>
                 <div class="ip-info-container">
                     <p class="ip-text">
-                        <span class="ip-text-title">IP Address:</span>168.192.45.5
+                        <span class="ip-text-title">IP Address:</span
+                        ><span id="ip-address">Searching...</span>
                     </p>
                     <p class="ip-text"><span class="ip-text-title">Port:</span>2843</p>
                 </div>
-                <div class="status-container">
-                    <p class="status-title">R10 Connection</p>
-                    <div class="status-icon status-color-yellow"></div>
+                <div id="garmin" class="status-container">
+                    <div class="status-text-container">
+                        <p class="status-title">R10 Connection</p>
+                        <p class="status-status">Disconnected</p>
+                    </div>
+                    <div class="status-icon status-color-red"></div>
                 </div>
             </div>
             <div class="messages-window">
-                <p class="message-text"><span class="message-text-title">\> 12:58 \>:</span>2843</p>
+                <div class="messages-window-overlay"></div>
                 <p class="message-text">
-                    <span class="message-text-title">\> 12:58 \>:</span>R10 message received...
+                    <span class="message-text-title">R10 🔅 00:00:</span
+                    ><span class="message-content">Info messages appear here...</span>
+                </p>
+                <p class="message-text">
+                    <span class="message-text-title">R10 🔅 00:00:</span
+                    ><span class="message-content message-text-red">Red are bad...</span>
+                </p>
+                <p class="message-text">
+                    <span class="message-text-title">R10 🔅 00:00:</span
+                    ><span class="message-content message-text-green">Green are good...</span>
                 </p>
             </div>
         </div>
-        <script src="./src/renderer.js"></script>
+        <script src="renderer.js"></script>
     </body>
 </html>
