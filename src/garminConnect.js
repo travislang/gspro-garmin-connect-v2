@@ -3,14 +3,14 @@ const { localIP } = require('./helpers/helpers')
 const SimMessages = require('./helpers/simMessages')
 
 class GarminConnect {
-    constructor(ipcPort) {
+    constructor(ipcPort, gsProConnect) {
         this.server = net.createServer()
         this.client = null
         this.ballData = {}
         this.clubData = {}
         this.clubType = '7Iron'
-        this.connectionStatus = false
         this.ipcPort = ipcPort
+        this.gsProConnect = gsProConnect
 
         this.init()
     }
@@ -62,6 +62,18 @@ class GarminConnect {
             case 'Disconnect':
                 this.handleDisconnect()
                 break
+            case 'SetClubType':
+                this.updateClubType(data.ClubType)
+                break
+            case 'SetBallData':
+                this.setBallData(data.BallData)
+                break
+            case 'SetClubData':
+                this.setClubData(data.ClubData)
+                break
+            case 'SendShot':
+                this.sendShot()
+                break
             default:
                 console.log('no match', data.Type)
         }
@@ -94,7 +106,6 @@ class GarminConnect {
             level: 'success',
         })
         this.client = conn
-        this.connectionStatus = true
 
         this.client.setEncoding('UTF8')
 
@@ -120,6 +131,68 @@ class GarminConnect {
         this.client.on('error', (e) => {
             console.log('client connection error', e)
         })
+    }
+
+    updateClubType(clubType) {
+        this.clubType = clubType
+
+        this.client.write(SimMessages.get_success_message('SetClubType'))
+
+        if (clubType == 'SandWedge') this.sendTestShot()
+    }
+
+    sendTestShot(ballSpeed = 128.5) {
+        this.ballData = {
+            ballspeed: ballSpeed,
+            spinaxis: -13.2,
+            totalspin: 2350.2,
+            hla: 0.0,
+            vla: 13.5,
+        }
+
+        this.sendShot()
+    }
+
+    setBallData(ballData) {
+        let spinAxis = ballData.SpinAxis
+        if (spinAxis > 90) {
+            spinAxis -= 360
+        }
+        spinAxis *= -1
+        this.ballData = {
+            ballspeed: ballData.BallSpeed,
+            spinaxis: spinAxis,
+            totalspin: ballData.TotalSpin,
+            hla: ballData.LaunchDirection,
+            vla: ballData.LaunchAngle,
+        }
+
+        this.client.write(SimMessages.get_success_message('SetBallData'))
+    }
+
+    setClubData(self, clubData) {
+        this.clubData = {
+            speed: clubData.ClubHeadSpeed,
+        }
+
+        this.client.write(SimMessages.get_success_message('SetClubData'))
+    }
+
+    sendShot() {
+        this.gsProConnect.launch_ball(this.ballData, this.clubData)
+
+        this.client.write(SimMessages.get_success_message('SendShot'))
+        this.client.write(SimMessages.get_shot_complete_message())
+        this.client.write(SimMessages.get_sim_command('Disarm'))
+
+        setTimeout(() => {
+            this.client.write(SimMessages.get_sim_command('Arm'))
+            this.ipcPort.postMessage({
+                type: 'gsProMessage',
+                message: 'Shot successful 💯',
+                level: 'success',
+            })
+        }, 1000)
     }
 }
 

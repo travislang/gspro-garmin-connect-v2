@@ -19,6 +19,10 @@ window.addEventListener('DOMContentLoaded', () => {
                 updateStatus('garmin', data.status)
             } else if (data.type === 'R10Message') {
                 printMessage('R10', data.message, data.level)
+            } else if (data.type === 'gsProStatus') {
+                updateStatus('gspro', data.status)
+            } else if (data.type === 'gsProMessage') {
+                printMessage('GSPro', data.message, data.level)
             }
         }
     }
