@@ -45,6 +45,10 @@ class GsProConnect {
             message: 'Disconnected from GSPro...',
             level: 'error',
         })
+        this.ipcPort.postMessage({
+            type: 'gsProShotStatus',
+            ready: false,
+        })
 
         this.connectSocket()
     }

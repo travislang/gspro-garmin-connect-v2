@@ -91,11 +91,13 @@ class GarminConnect {
             message: 'Disconnected from R10...',
             level: 'error',
         })
+        this.ipcPort.postMessage({
+            type: 'gsProShotStatus',
+            ready: false,
+        })
     }
 
     handleConnection(conn) {
-        var remoteAddress = conn.remoteAddress + ':' + conn.remotePort
-        console.log('new client connection from %s', remoteAddress)
         this.ipcPort.postMessage({
             type: 'garminStatus',
             status: 'connected',
@@ -104,6 +106,10 @@ class GarminConnect {
             type: 'R10Message',
             message: 'Connected to R10',
             level: 'success',
+        })
+        this.ipcPort.postMessage({
+            type: 'gsProShotStatus',
+            ready: true,
         })
         this.client = conn
 
@@ -167,19 +173,33 @@ class GarminConnect {
             vla: ballData.LaunchAngle,
         }
 
+        this.ipcPort.postMessage({
+            type: 'gsProShotStatus',
+            ready: false,
+        })
+
         this.client.write(SimMessages.get_success_message('SetBallData'))
     }
 
-    setClubData(self, clubData) {
+    setClubData(clubData) {
         this.clubData = {
             speed: clubData.ClubHeadSpeed,
         }
 
+        this.ipcPort.postMessage({
+            type: 'gsProShotStatus',
+            ready: false,
+        })
+
         this.client.write(SimMessages.get_success_message('SetClubData'))
     }
 
-    sendShot() {
-        this.gsProConnect.launch_ball(this.ballData, this.clubData)
+    async sendShot() {
+        this.ipcPort.postMessage({
+            type: 'gsProShotStatus',
+            ready: false,
+        })
+        // this.gsProConnect.launch_ball(this.ballData, this.clubData)
 
         this.client.write(SimMessages.get_success_message('SendShot'))
         this.client.write(SimMessages.get_shot_complete_message())
@@ -189,8 +209,12 @@ class GarminConnect {
             this.client.write(SimMessages.get_sim_command('Arm'))
             this.ipcPort.postMessage({
                 type: 'gsProMessage',
-                message: 'Shot successful 💯',
+                message: '💯 Shot successful 💯',
                 level: 'success',
+            })
+            this.ipcPort.postMessage({
+                type: 'gsProShotStatus',
+                ready: true,
             })
         }, 1000)
     }

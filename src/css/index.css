@@ -100,6 +100,7 @@ body {
     border: 1px solid #767676;
     border-radius: 5px;
     margin: 50px;
+    margin-top: 0px;
     width: 500px;
     height: 250px;
     display: flex;
@@ -135,4 +136,16 @@ body {
     color: rgb(145, 145, 145);
     font-weight: bold;
     margin-right: 11px;
+}
+
+.shot-status-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0px;
+}
+
+.shot-status {
+    font-size: 25px;
+    font-weight: bold;
+    text-transform: uppercase;
 }

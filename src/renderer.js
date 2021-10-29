@@ -23,6 +23,8 @@ window.addEventListener('DOMContentLoaded', () => {
                 updateStatus('gspro', data.status)
             } else if (data.type === 'gsProMessage') {
                 printMessage('GSPro', data.message, data.level)
+            } else if (data.type === 'gsProShotStatus') {
+                updateShotStatus(data.ready)
             }
         }
     }
@@ -73,5 +75,21 @@ window.addEventListener('DOMContentLoaded', () => {
         text.innerHTML = message
 
         mw.append(messageEl)
+    }
+
+    function updateShotStatus(ready) {
+        const shotReadyText = document.querySelector('.shot-status')
+        console.log('in', shotReadyText)
+        if (ready) {
+            shotReadyText.innerHTML = 'Ready For Shot  💣'
+
+            shotReadyText.classList.remove('message-text-red')
+            shotReadyText.classList.add('message-text-green')
+        } else {
+            shotReadyText.innerHTML = 'Wait ✋'
+
+            shotReadyText.classList.remove('message-text-green')
+            shotReadyText.classList.add('message-text-red')
+        }
     }
 })
