@@ -1,7 +1,7 @@
 {
     "name": "gspro-garmin-connect-v2",
     "productName": "gspro-garmin-connect-v2",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "description": "Connect R10 to GSPro",
     "main": "src/index.js",
     "scripts": {
@@ -22,23 +22,18 @@
             "makers": [
                 {
                     "name": "@electron-forge/maker-squirrel",
+                    "pla'tforms": [
+                        "windows",
+                        "linux"
+                    ],
                     "config": {
-                        "name": "gspro_garmin_connect_v2"
+                        "exe": "R10 Connect",
+                        "certificateFile": "./cert.pfx",
+                        "certificatePassword": "this-is-a-secret"
                     }
                 },
                 {
-                    "name": "@electron-forge/maker-zip",
-                    "platforms": [
-                        "darwin"
-                    ]
-                },
-                {
-                    "name": "@electron-forge/maker-deb",
-                    "config": {}
-                },
-                {
-                    "name": "@electron-forge/maker-rpm",
-                    "config": {}
+                    "name": "@electron-forge/maker-zip"
                 }
             ]
         }
@@ -46,6 +41,7 @@
     "dependencies": {
         "dotenv": "^10.0.0",
         "electron-squirrel-startup": "^1.0.0",
+        "update-electron-app": "^2.0.1",
         "ws": "^8.2.3"
     },
     "devDependencies": {
