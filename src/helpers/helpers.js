@@ -15,6 +15,8 @@ for (const name of Object.keys(nets)) {
     }
 }
 
-console.log('results', results)
+let localIp =  results[Object.keys(results)[0]][0]
 
-exports.localIP = results['en0'][0]
+console.log('localIp', localIp)
+
+exports.localIP = localIp

@@ -10,7 +10,6 @@ require('dotenv').config()
 const { app, BrowserWindow, MessageChannelMain } = require('electron')
 const path = require('path')
 
-// const { ws } = require('./gsProConnect.js')
 const GarminConnect = require('./garminConnect.js')
 const GsProConnect = require('./gsProConnect.js')
 
@@ -20,7 +19,7 @@ if (require('electron-squirrel-startup')) {
 
 const startApp = () => {
     const mainWindow = new BrowserWindow({
-        width: 650,
+        width: 675,
         height: 500,
         webPreferences: {
             contextIsolation: true,
@@ -30,7 +29,7 @@ const startApp = () => {
     })
 
     mainWindow.loadFile(path.join(__dirname, 'index.html'))
-    mainWindow.webContents.openDevTools({ mode: 'detach' })
+    // mainWindow.webContents.openDevTools({ mode: 'detach' })
 
     const { port1, port2 } = new MessageChannelMain()
 

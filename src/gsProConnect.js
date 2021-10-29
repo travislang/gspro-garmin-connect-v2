@@ -28,9 +28,43 @@ class GsProConnect {
             {
                 address: process.env.IP_ADDRESS,
                 port: process.env.PORT,
-            },
-            this.handleConnection
+            }
         )
+        this.socket.setTimeout(5000);
+
+        this.socket.on('timeout', () => {
+            this.ipcPort.postMessage({
+                type: 'GSProMessage',
+                message: 'Can\'t connect to GSPro.  Trying again...',
+            })
+            this.socket.end();
+            this.connectSocket()
+        });
+
+        this.socket.on('connect', () => this.handleConnection())
+
+        this.socket.on('error', (e) => {
+            if (e.code === 'ECONNREFUSED') {
+                this.ipcPort.postMessage({
+                    type: 'R10Message',
+                    message:
+                        'Connection refused.  Do you have the GSPro Connect window open?  Retrying...',
+                })
+                setTimeout(() => {
+                    this.connectSocket()
+                }, 5000)
+            } else {
+                console.log('error with gspro socket', e)
+                this.ipcPort.postMessage({
+                    type: 'GSProMessage',
+                    message: 'Error with GSPro connection.  Trying to reconnect...',
+                })
+                this.handleDisconnect()
+                setTimeout(() => {
+                    this.connectSocket()
+                }, 5000)
+            }
+        })
     }
 
     handleDisconnect() {
@@ -65,14 +99,7 @@ class GsProConnect {
         })
 
         this.socket.setEncoding('UTF8')
-
-        this.socket.on('error', (e) => {
-            console.log('error with gspro socket', e)
-            this.ipcPort.postMessage({
-                type: 'GSProMessage',
-                message: 'Error with GSPro connection.  Trying to reconnect...',
-            })
-        })
+        this.socket.setTimeout(0);
 
         this.socket.on('close', (hadError) => {
             console.log('gsPro connection closed.  Had error: ', hadError)
@@ -89,17 +116,13 @@ class GsProConnect {
         })
     }
 
-    sendMessage(payload) {
-        this.socket.write(JSON.stringify(payload))
-    }
-
     launchBall(ballData, clubData) {
         const APIData = {
             DeviceID: this.deviceID,
             Units: this.unit,
             ShotNumber: this.shotNumber,
             APIversion: this.apiVersion,
-            BallDat: {
+            BallData: {
                 Speed: ballData.ballspeed,
                 SpinAxix: ballData.spinaxis,
                 TotalSpin: ballData.totalspin,
@@ -129,7 +152,7 @@ class GsProConnect {
             }
         }
 
-        this.sendMessage(APIData)
+        this.socket.write(JSON.stringify(APIData))
 
         this.shotNumber++
     }

@@ -147,9 +147,9 @@ class GarminConnect {
         if (clubType == 'SandWedge') this.sendTestShot()
     }
 
-    sendTestShot(ballSpeed = 128.5) {
+    sendTestShot() {
         this.ballData = {
-            ballspeed: ballSpeed,
+            ballspeed: 128.5,
             spinaxis: -13.2,
             totalspin: 2350.2,
             hla: 0.0,
@@ -199,7 +199,7 @@ class GarminConnect {
             type: 'gsProShotStatus',
             ready: false,
         })
-        // this.gsProConnect.launch_ball(this.ballData, this.clubData)
+        this.gsProConnect.launchBall(this.ballData, this.clubData)
 
         this.client.write(SimMessages.get_success_message('SendShot'))
         this.client.write(SimMessages.get_shot_complete_message())
