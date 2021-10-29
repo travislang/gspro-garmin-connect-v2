@@ -16,6 +16,10 @@
         "name": "reactive"
     },
     "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/npm/cli.git"
+    },
     "config": {
         "forge": {
             "packagerConfig": {},
