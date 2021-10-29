@@ -149,3 +149,11 @@ body {
     font-weight: bold;
     text-transform: uppercase;
 }
+
+.credit-text {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 10px;
+    color: rgb(109, 109, 109);
+}
