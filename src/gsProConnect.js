@@ -1,6 +1,8 @@
 const net = require('net')
 const ENV = require('./env')
 
+const TIMEOUT_MS = 5000
+
 class GsProConnect {
     constructor(ipcPort) {
         this.deviceID = ENV.DEVICE_ID
@@ -38,7 +40,7 @@ class GsProConnect {
                 type: 'GSProMessage',
                 message: "Can't connect to GSPro.  Trying again...",
             })
-            this.socket.end()
+            this.socket.destroy()
             this.connectSocket()
         })
 
@@ -53,39 +55,41 @@ class GsProConnect {
                 })
                 setTimeout(() => {
                     this.connectSocket()
-                }, 5000)
+                }, TIMEOUT_MS)
             } else {
                 console.log('error with gspro socket', e)
+                this.handleDisconnect()
                 this.ipcPort.postMessage({
                     type: 'GSProMessage',
                     message: 'Error with GSPro connection.  Trying to reconnect...',
                 })
-                this.handleDisconnect()
                 setTimeout(() => {
+                    console.log('reconnecting')
                     this.connectSocket()
-                }, 5000)
+                }, TIMEOUT_MS)
             }
         })
     }
 
     handleDisconnect() {
-        if (this.socket) this.socket.destroy()
-        this.socket = null
-        this.ipcPort.postMessage({
-            type: 'gsProStatus',
-            status: 'disconnected',
-        })
-        this.ipcPort.postMessage({
-            type: 'gsProMessage',
-            message: 'Disconnected from GSPro...',
-            level: 'error',
-        })
-        this.ipcPort.postMessage({
-            type: 'gsProShotStatus',
-            ready: false,
-        })
+        if (this.socket) {
+            this.socket.destroy()
 
-        this.connectSocket()
+            this.socket = null
+            this.ipcPort.postMessage({
+                type: 'gsProStatus',
+                status: 'disconnected',
+            })
+            this.ipcPort.postMessage({
+                type: 'gsProMessage',
+                message: 'Disconnected from GSPro...',
+                level: 'error',
+            })
+            this.ipcPort.postMessage({
+                type: 'gsProShotStatus',
+                ready: false,
+            })
+        }
     }
 
     handleConnection() {
@@ -104,7 +108,10 @@ class GsProConnect {
 
         this.socket.on('close', (hadError) => {
             console.log('gsPro connection closed.  Had error: ', hadError)
-            this.handleDisconnect()
+            if(!hadError) {
+                this.handleDisconnect()
+                setTimeout(() => this.connectSocket(), TIMEOUT_MS)
+            }
         })
 
         this.socket.on('data', (data) => {

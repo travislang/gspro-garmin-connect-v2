@@ -156,9 +156,9 @@ class GarminConnect {
     sendTestShot() {
         this.ballData = {
             ballspeed: 98.5,
-            spinaxis: -15.2,
-            totalspin: 4350.2,
-            hla: 2.0,
+            spinaxis: -10.2,
+            totalspin: 2350.2,
+            hla: 0.0,
             vla: 13.5,
         }
 
