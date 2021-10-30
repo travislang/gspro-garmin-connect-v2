@@ -1,7 +1,7 @@
 {
     "name": "gspro-garmin-connect-v2",
     "productName": "gspro-garmin-connect-v2",
-    "version": "1.0.2",
+    "version": "1.0.8",
     "description": "Connect R10 to GSPro",
     "main": "src/index.js",
     "scripts": {
