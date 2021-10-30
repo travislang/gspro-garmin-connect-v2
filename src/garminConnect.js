@@ -12,6 +12,13 @@ class GarminConnect {
         this.ipcPort = ipcPort
         this.gsProConnect = gsProConnect
 
+        ipcPort.on('message', (event) => {
+            if (event.data === 'sendTestShot') {
+                this.sendTestShot()
+            }
+        })
+        ipcPort.start()
+
         this.init()
     }
 
@@ -143,8 +150,6 @@ class GarminConnect {
         this.clubType = clubType
 
         this.client.write(SimMessages.get_success_message('SetClubType'))
-
-        if (clubType == 'SandWedge') this.sendTestShot()
     }
 
     sendTestShot() {

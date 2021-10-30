@@ -29,11 +29,11 @@ const startApp = () => {
     })
 
     mainWindow.loadFile(path.join(__dirname, 'index.html'))
-    // mainWindow.webContents.openDevTools({ mode: 'detach' })
+    mainWindow.webContents.openDevTools({ mode: 'detach' })
 
     const { port1, port2 } = new MessageChannelMain()
 
-    port2.start()
+    // port2.start()
 
     const gsProConnect = new GsProConnect(port2)
     const garminConnect = new GarminConnect(port2, gsProConnect)

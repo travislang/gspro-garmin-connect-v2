@@ -24,22 +24,20 @@ class GsProConnect {
             message: 'Trying to connect to GSPro...',
         })
 
-        this.socket = net.createConnection(
-            {
-                address: process.env.IP_ADDRESS,
-                port: process.env.PORT,
-            }
-        )
-        this.socket.setTimeout(5000);
+        this.socket = net.createConnection({
+            address: process.env.IP_ADDRESS,
+            port: process.env.PORT,
+        })
+        this.socket.setTimeout(5000)
 
         this.socket.on('timeout', () => {
             this.ipcPort.postMessage({
                 type: 'GSProMessage',
-                message: 'Can\'t connect to GSPro.  Trying again...',
+                message: "Can't connect to GSPro.  Trying again...",
             })
-            this.socket.end();
+            this.socket.end()
             this.connectSocket()
-        });
+        })
 
         this.socket.on('connect', () => this.handleConnection())
 
@@ -99,7 +97,7 @@ class GsProConnect {
         })
 
         this.socket.setEncoding('UTF8')
-        this.socket.setTimeout(0);
+        this.socket.setTimeout(0)
 
         this.socket.on('close', (hadError) => {
             console.log('gsPro connection closed.  Had error: ', hadError)

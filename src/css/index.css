@@ -101,6 +101,7 @@ body {
     border-radius: 5px;
     margin: 50px;
     margin-top: 0px;
+    margin-bottom: 25px;
     width: 500px;
     height: 250px;
     display: flex;
@@ -161,4 +162,43 @@ body {
 a {
     font-size: 10px;
     color: rgb(109, 109, 109);
+}
+
+.send-test-shot {
+    border-radius: 5px;
+    background-color: rgba(150, 244, 122, 0.673);
+    border: 2px solid rgba(98, 247, 53, 1);
+    cursor: pointer;
+    padding: 10px 25px;
+}
+
+.send-test-shot:active {
+    border-radius: 5px;
+    background-color: rgba(150, 244, 122, 0.397);
+    border: 2px solid rgba(98, 247, 53, 0.632);
+    cursor: pointer;
+    padding: 10px 25px;
+}
+.send-test-shot-disabled {
+    border-radius: 5px;
+    background-color: rgba(104, 104, 104, 0.673);
+    border: 2px solid rgb(58, 58, 58);
+    padding: 10px 25px;
+}
+
+.send-test-shot p {
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: rgb(31, 31, 31);
+}
+.send-test-shot-disabled p {
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: rgb(201, 201, 201);
+}
+
+.disabled {
+    cursor: not-allowed;
 }

@@ -2,6 +2,9 @@ window.addEventListener('DOMContentLoaded', () => {
     const IPText = document.getElementById('ip-address')
     if (IPText && window.mainAPI.localIP) IPText.innerText = window.mainAPI.localIP
 
+    let timeout = false
+    let gsProConnected = false
+
     window.onmessage = (event) => {
         if (event.source === window && event.data === 'main-port') {
             const [port] = event.ports
@@ -10,6 +13,24 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 handleMessage(event.data)
             }
+
+            const sendTestShotButton = document.querySelector('#send-test-shot')
+
+            sendTestShotButton.addEventListener('click', () => {
+                if (!gsProConnected) {
+                    return
+                }
+                timeout = true
+                port.postMessage('sendTestShot')
+
+                sendTestShotButton.classList.remove('send-test-shot')
+                sendTestShotButton.classList.add('send-test-shot-disabled')
+                setTimeout(() => {
+                    sendTestShotButton.classList.remove('send-test-shot-disabled')
+                    sendTestShotButton.classList.add('send-test-shot')
+                    timeout = false
+                }, 2000)
+            })
         }
     }
 
@@ -30,6 +51,19 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateStatus(element, status) {
+        if (element === 'gspro') {
+            const sendTestShotButton = document.querySelector('#send-test-shot')
+
+            if (status === 'connected') {
+                gsProConnected = true
+                sendTestShotButton.classList.remove('send-test-shot-disabled')
+                sendTestShotButton.classList.add('send-test-shot')
+            } else {
+                gsProConnected = false
+                sendTestShotButton.classList.remove('send-test-shot')
+                sendTestShotButton.classList.add('send-test-shot-disabled')
+            }
+        }
         const COLOR_CLASSES = ['status-color-red', 'status-color-yellow', 'status-color-green']
 
         const el = document.getElementById(element)
