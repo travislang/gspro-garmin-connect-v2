@@ -1,6 +1,7 @@
 const net = require('net')
 const { localIP } = require('./helpers/helpers')
 const SimMessages = require('./helpers/simMessages')
+const ENV = require('./env')
 
 class GarminConnect {
     constructor(ipcPort, gsProConnect) {
@@ -46,7 +47,7 @@ class GarminConnect {
 
     listen() {
         this.server.close()
-        this.server.listen(process.env.GARMIN_PORT, localIP, () => {
+        this.server.listen(ENV.GARMIN_PORT, localIP, () => {
             this.ipcPort.postMessage({
                 type: 'garminStatus',
                 status: 'connecting',

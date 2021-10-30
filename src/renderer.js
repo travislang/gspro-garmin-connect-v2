@@ -29,7 +29,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     sendTestShotButton.classList.remove('send-test-shot-disabled')
                     sendTestShotButton.classList.add('send-test-shot')
                     timeout = false
-                }, 2000)
+                }, 8000)
             })
         }
     }

@@ -1,11 +1,12 @@
 const net = require('net')
+const ENV = require('./env')
 
 class GsProConnect {
     constructor(ipcPort) {
-        this.deviceID = process.env.DEVICE_ID
-        this.units = process.env.UNITS
-        this.apiVersion = process.env.API_VERSION
-        this.sendClubData = process.env.clubData
+        this.deviceID = ENV.DEVICE_ID
+        this.units = ENV.UNITS
+        this.apiVersion = ENV.API_VERSION
+        this.sendClubData = ENV.CLUB_DATA
 
         this.shotNumber = 1
         this.socket = null
@@ -24,11 +25,13 @@ class GsProConnect {
             message: 'Trying to connect to GSPro...',
         })
 
-        this.socket = net.createConnection({
-            address: process.env.IP_ADDRESS,
-            port: process.env.PORT,
-        })
-        this.socket.setTimeout(5000)
+        this.socket = net.createConnection(
+            {
+                address: ENV.IP_ADDRESS,
+                port: ENV.PORT,
+            }
+        )
+        this.socket.setTimeout(5000);
 
         this.socket.on('timeout', () => {
             this.ipcPort.postMessage({

@@ -1,12 +1,12 @@
-try {
-    require('electron-reloader')(module)
-} catch (_) {}
+// try {
+//     require('electron-reloader')(module)
+// } catch (_) {}
 
 require('update-electron-app')({
     updateInterval: '1 hour',
 })
 
-require('dotenv').config()
+// require('dotenv').config()
 const { app, BrowserWindow, MessageChannelMain } = require('electron')
 const path = require('path')
 

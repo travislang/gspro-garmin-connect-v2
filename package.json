@@ -25,18 +25,6 @@
             "packagerConfig": {},
             "makers": [
                 {
-                    "name": "@electron-forge/maker-squirrel",
-                    "pla'tforms": [
-                        "windows",
-                        "linux"
-                    ],
-                    "config": {
-                        "exe": "R10 Connect",
-                        "certificateFile": "./cert.pfx",
-                        "certificatePassword": "this-is-a-secret"
-                    }
-                },
-                {
                     "name": "@electron-forge/maker-zip"
                 }
             ]
