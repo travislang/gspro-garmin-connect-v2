@@ -7,9 +7,9 @@ I am not responsible for what you use it for!
 
 ## Usage
 
-Download this repos .zip file.
+### Using the .zip file:
 
-Extract the .zip file and run the setup.exe file.
+Extract the .zip file and run the .exe file.
 
 You will see an IP and port in the main window:
 
