@@ -207,12 +207,16 @@ class GarminConnect {
         })
         this.gsProConnect.launchBall(this.ballData, this.clubData)
 
-        this.client.write(SimMessages.get_success_message('SendShot'))
-        this.client.write(SimMessages.get_shot_complete_message())
-        this.client.write(SimMessages.get_sim_command('Disarm'))
+        if(this.client) {
+            this.client.write(SimMessages.get_success_message('SendShot'))
+            this.client.write(SimMessages.get_shot_complete_message())
+            this.client.write(SimMessages.get_sim_command('Disarm'))
+        }
 
         setTimeout(() => {
-            this.client.write(SimMessages.get_sim_command('Arm'))
+            if(this.client) {
+                this.client.write(SimMessages.get_sim_command('Arm'))
+            }
             this.ipcPort.postMessage({
                 type: 'gsProMessage',
                 message: '💯 Shot successful 💯',
