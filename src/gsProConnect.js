@@ -131,9 +131,9 @@ class GsProConnect {
             ShotNumber: this.shotNumber,
             APIversion: this.apiVersion,
             BallData: {
-                Speed: ballData.ballspeed,
-                SpinAxix: ballData.spinaxis,
-                TotalSpin: ballData.totalspin,
+                Speed: ballData.ballSpeed,
+                SpinAxis: ballData.spinAxis,
+                TotalSpin: ballData.totalSpin,
                 HLA: ballData.hla,
                 VLA: ballData.vla,
             },
@@ -142,6 +142,8 @@ class GsProConnect {
                 ContainsClubData: false,
             },
         }
+
+        console.log('info', ballData, APIData)
 
         if (this.sendClubData) {
             APIData.ShotDataOptions.ContainsClubData = true

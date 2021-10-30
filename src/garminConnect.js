@@ -155,9 +155,9 @@ class GarminConnect {
 
     sendTestShot() {
         this.ballData = {
-            ballspeed: 98.5,
-            spinaxis: -10.2,
-            totalspin: 2350.2,
+            ballSpeed: 98.5,
+            spinAxis: -10.2,
+            totalSpin: 2350.2,
             hla: 0.0,
             vla: 13.5,
         }
@@ -166,15 +166,15 @@ class GarminConnect {
     }
 
     setBallData(ballData) {
-        let spinAxis = ballData.SpinAxis
+        let spinAxis = Number(ballData.SpinAxis)
         if (spinAxis > 90) {
             spinAxis -= 360
         }
         spinAxis *= -1
         this.ballData = {
-            ballspeed: ballData.BallSpeed,
-            spinaxis: spinAxis,
-            totalspin: ballData.TotalSpin,
+            ballSpeed: ballData.BallSpeed,
+            spinAxis: spinAxis,
+            totalSpin: ballData.TotalSpin,
             hla: ballData.LaunchDirection,
             vla: ballData.LaunchAngle,
         }
