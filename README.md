@@ -9,6 +9,8 @@ I am not responsible for what you use it for!
 
 ### Using the .zip file:
 
+Open GSPro.  Make sure the GSPro Connect window is open.  Make sure it's on the open API setting.
+
 Extract the .zip file and run the .exe file.
 
 You will see an IP and port in the main window:
