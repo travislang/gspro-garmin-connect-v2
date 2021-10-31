@@ -13,6 +13,8 @@ class GarminConnect {
         this.ipcPort = ipcPort
         this.gsProConnect = gsProConnect
         this.localIP = localIP
+        this.pingTimeout = false
+        this.intervalID = null
 
         ipcPort.on('message', (event) => {
             if (event.data === 'sendTestShot') {
@@ -106,6 +108,9 @@ class GarminConnect {
             case 'Disconnect':
                 this.handleDisconnect()
                 break
+            case 'Pong':
+                this.handlePong()
+                break
             case 'SetClubType':
                 this.updateClubType(data.ClubType)
                 break
@@ -141,6 +146,32 @@ class GarminConnect {
         })
     }
 
+    handlePong() {
+        this.pingTimeout = false
+    }
+
+    sendPing() {
+        this.pingTimeout = true
+
+        this.client.write(SimMessages.get_sim_command('Ping'))
+
+        setTimeout(() => {
+            if (this.pingTimeout === true) {
+                this.ipcPort.postMessage({
+                    type: 'R10Message',
+                    message: 'R10 stopped responding...',
+                    level: 'error',
+                })
+                if (this.intervalID) {
+                    clearInterval(this.intervalID)
+                }
+                this.handleDisconnect()
+                this.listen()
+            } else {
+            }
+        }, 3000)
+    }
+
     handleConnection(conn) {
         this.ipcPort.postMessage({
             type: 'garminStatus',
@@ -160,7 +191,12 @@ class GarminConnect {
         this.client.setEncoding('UTF8')
 
         this.client.on('ready', () => {
-            console.log('socket is ready')
+            if (this.intervalID) {
+                clearInterval(this.intervalID)
+            }
+            this.intervalID = setInterval(() => {
+                this.sendPing()
+            }, 10000)
         })
 
         this.client.on('data', (data) => {
@@ -245,14 +281,18 @@ class GarminConnect {
 
         if (this.client) {
             this.client.write(SimMessages.get_success_message('SendShot'))
-            this.client.write(SimMessages.get_shot_complete_message())
-            this.client.write(SimMessages.get_sim_command('Disarm'))
+            setTimeout(() => {
+                this.client.write(SimMessages.get_shot_complete_message())
+            }, 300)
+            setTimeout(() => {
+                this.client.write(SimMessages.get_sim_command('Disarm'))
+            }, 700)
+            setTimeout(() => {
+                this.client.write(SimMessages.get_sim_command('Arm'))
+            }, 1000)
         }
 
         setTimeout(() => {
-            if (this.client) {
-                this.client.write(SimMessages.get_sim_command('Arm'))
-            }
             this.ipcPort.postMessage({
                 type: 'gsProMessage',
                 message: '💯 Shot successful 💯',

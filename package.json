@@ -1,7 +1,7 @@
 {
     "name": "gspro-garmin-connect-v2",
     "productName": "gspro-garmin-connect-v2",
-    "version": "1.1.0",
+    "version": "1.2.1",
     "description": "Connect R10 to GSPro",
     "main": "src/index.js",
     "scripts": {
@@ -22,7 +22,10 @@
     },
     "config": {
         "forge": {
-            "packagerConfig": {},
+            "packagerConfig": {
+                "name": "gspro-r10-connect",
+                "icon": "./assets/golf-logo.ico"
+            },
             "makers": [
                 {
                     "name": "@electron-forge/maker-zip"
@@ -31,10 +34,7 @@
         }
     },
     "dependencies": {
-        "dotenv": "^10.0.0",
-        "electron-squirrel-startup": "^1.0.0",
-        "update-electron-app": "^2.0.1",
-        "ws": "^8.2.3"
+        "electron-squirrel-startup": "^1.0.0"
     },
     "devDependencies": {
         "@electron-forge/cli": "^6.0.0-beta.61",
