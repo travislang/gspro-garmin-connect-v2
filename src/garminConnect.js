@@ -148,6 +148,7 @@ class GarminConnect {
     }
 
     sendPing() {
+        console.log('sending ping')
         this.pingTimeout = true
 
         this.client.write(SimMessages.get_sim_command('Ping'))
@@ -187,14 +188,12 @@ class GarminConnect {
 
         this.client.setEncoding('UTF8')
 
-        this.client.on('ready', () => {
-            if (this.intervalID) {
-                clearInterval(this.intervalID)
-            }
-            this.intervalID = setInterval(() => {
-                this.sendPing()
-            }, 10000)
-        })
+        if (this.intervalID) {
+            clearInterval(this.intervalID)
+        }
+        this.intervalID = setInterval(() => {
+            this.sendPing()
+        }, 10000)
 
         this.client.on('data', (data) => {
             try {
