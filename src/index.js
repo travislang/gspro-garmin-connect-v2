@@ -2,11 +2,6 @@ try {
     require('electron-reloader')(module)
 } catch (_) {}
 
-require('update-electron-app')({
-    updateInterval: '1 hour',
-})
-
-// require('dotenv').config()
 const { app, BrowserWindow, MessageChannelMain } = require('electron')
 const path = require('path')
 
@@ -29,7 +24,7 @@ const startApp = () => {
     })
 
     mainWindow.loadFile(path.join(__dirname, 'index.html'))
-    mainWindow.webContents.openDevTools()
+    // mainWindow.webContents.openDevTools()
 
     const { port1, port2 } = new MessageChannelMain()
 

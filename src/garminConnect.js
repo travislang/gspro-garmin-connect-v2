@@ -148,7 +148,6 @@ class GarminConnect {
     }
 
     sendPing() {
-        console.log('sending ping')
         this.pingTimeout = true
 
         this.client.write(SimMessages.get_sim_command('Ping'))
