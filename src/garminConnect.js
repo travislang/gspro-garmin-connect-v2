@@ -35,7 +35,7 @@ class GarminConnect {
 
         ipcPort.start()
 
-        this.init()
+        this.listen()
     }
 
     setNewIP(ip) {
@@ -57,33 +57,30 @@ class GarminConnect {
         this.listen()
     }
 
-    init() {
+    listen() {
+        if (this.server) {
+            this.server.close()
+        }
+        this.server = net.createServer()
+
         this.server.on('connection', (conn) => {
             this.handleConnection(conn)
         })
 
         this.server.on('error', (e) => {
             if (e.code === 'EADDRINUSE') {
-                console.log('Address in use, retrying...')
                 this.ipcPort.postMessage({
                     type: 'R10Message',
                     message:
                         'Address already in use.  Do you have this program open in another window?  Retrying...',
                 })
-                setTimeout(() => {
-                    this.listen()
-                }, 5000)
+            } else {
+                console.log('error with garmin server', e)
             }
+            setTimeout(() => {
+                this.listen()
+            }, 5000)
         })
-
-        this.listen()
-    }
-
-    listen() {
-        if (this.server) {
-            this.server.close()
-        }
-        this.server = net.createServer()
 
         this.server.listen(ENV.GARMIN_PORT, this.localIP, () => {
             this.ipcPort.postMessage({
