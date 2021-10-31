@@ -1,22 +1,17 @@
 const { networkInterfaces } = require('os')
 
 const nets = networkInterfaces()
-const results = {} // Or just '{}', an empty object
 
-for (const name of Object.keys(nets)) {
+const results = Object.keys(nets).reduce((curr, name) => {
     for (const net of nets[name]) {
-        // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
         if (net.family === 'IPv4' && !net.internal) {
-            if (!results[name]) {
-                results[name] = []
-            }
-            results[name].push(net.address)
+            curr.push(net.address)
         }
     }
-}
+    return curr
+}, [])
 
-let localIp =  results[Object.keys(results)[0]][0]
-
-console.log('localIp', localIp)
+let localIp = results.length ? results[0] : '127.0.0.1'
 
 exports.localIP = localIp
+exports.localIPs = results

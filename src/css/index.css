@@ -72,10 +72,12 @@ body {
 
 .ip-info-container {
     padding: 10px;
+    padding-right: 30px;
     border: 1px solid #b8b8b8;
     border-radius: 5px;
     margin-right: 20px;
     margin-left: 20px;
+    position: relative;
 }
 
 .ip-text {
@@ -201,4 +203,41 @@ a {
 
 .disabled {
     cursor: not-allowed;
+}
+
+#ip-settings {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.ip-settings-options-container {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background-color: rgb(77, 77, 77);
+    border-radius: 10px;
+    box-shadow: 2px 0px 18px rgba(4, 4, 4, 0.632);
+    display: flex;
+    flex-direction: column;
+    padding: 10px 20px;
+    visibility: hidden;
+}
+
+.ip-option-text {
+    cursor: pointer;
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-weight: bold;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    color: rgb(143, 143, 143);
+    /* color: rgb(220, 220, 220); */
+    /* background-color: red; */
+}
+
+.ip-option-text-selected {
+    color: rgb(220, 220, 220);
 }

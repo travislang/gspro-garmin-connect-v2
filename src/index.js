@@ -1,6 +1,6 @@
-// try {
-//     require('electron-reloader')(module)
-// } catch (_) {}
+try {
+    require('electron-reloader')(module)
+} catch (_) {}
 
 require('update-electron-app')({
     updateInterval: '1 hour',
@@ -29,11 +29,9 @@ const startApp = () => {
     })
 
     mainWindow.loadFile(path.join(__dirname, 'index.html'))
-    // mainWindow.webContents.openDevTools({ mode: 'detach' })
+    mainWindow.webContents.openDevTools()
 
     const { port1, port2 } = new MessageChannelMain()
-
-    // port2.start()
 
     const gsProConnect = new GsProConnect(port2)
     const garminConnect = new GarminConnect(port2, gsProConnect)

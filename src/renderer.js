@@ -1,16 +1,15 @@
 window.addEventListener('DOMContentLoaded', () => {
-    const IPText = document.getElementById('ip-address')
-    if (IPText && window.mainAPI.localIP) IPText.innerText = window.mainAPI.localIP
-
     let timeout = false
     let gsProConnected = false
+    let port
+
+    let ipOptionsOpen = false
 
     window.onmessage = (event) => {
         if (event.source === window && event.data === 'main-port') {
-            const [port] = event.ports
-            port.onmessage = (event) => {
-                console.log('from main process:', event.data)
-
+            const [_port] = event.ports
+            port = _port
+            _port.onmessage = (event) => {
                 handleMessage(event.data)
             }
 
@@ -34,6 +33,19 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function toggleModal() {
+        const ipOptionsContainer = document.querySelector('.ip-settings-options-container')
+
+        if (ipOptionsOpen) {
+            ipOptionsContainer.style.visibility = 'hidden'
+        } else {
+            ipOptionsContainer.style.visibility = 'visible'
+        }
+        ipOptionsOpen = !ipOptionsOpen
+    }
+
+    document.querySelector('#ip-settings').addEventListener('click', toggleModal)
+
     function handleMessage(data) {
         if (data.type) {
             if (data.type === 'garminStatus') {
@@ -46,8 +58,54 @@ window.addEventListener('DOMContentLoaded', () => {
                 printMessage('GSPro', data.message, data.level)
             } else if (data.type === 'gsProShotStatus') {
                 updateShotStatus(data.ready)
+            } else if (data.type === 'ipOptions') {
+                setIPOptions(data.data, true)
+            } else if (data.type === 'setIP') {
+                setIP(data.data)
             }
         }
+    }
+
+    function setIP(ip) {
+        const IPText = document.getElementById('ip-address')
+        IPText.innerText = ip
+        updateIPOptions(ip)
+    }
+
+    function updateIPOptions(activeIp) {
+        const ipOptionsContainer = document.querySelector('.ip-settings-options-container')
+
+        ipOptionsContainer.querySelectorAll('.ip-option-text').forEach((ipOption) => {
+            if (ipOption.innerHTML === activeIp) {
+                ipOption.classList.add('ip-option-text-selected')
+            } else {
+                ipOption.classList.remove('ip-option-text-selected')
+            }
+        })
+    }
+
+    function setIPOptions(ips) {
+        const ipOptionsContainer = document.querySelector('.ip-settings-options-container')
+
+        const ipTextNode = ipOptionsContainer.querySelector('.ip-option-text').cloneNode(true)
+
+        ipOptionsContainer.innerHTML = ''
+
+        for (let ip of ips) {
+            const ipText = ipTextNode.cloneNode(true)
+
+            ipText.innerHTML = ip
+            ipOptionsContainer.append(ipText)
+        }
+
+        ipOptionsContainer.addEventListener('click', (e) => {
+            port.postMessage({
+                type: 'setIP',
+                data: e.target.innerHTML,
+            })
+            toggleModal()
+            // ipOptionsOpen = !ipOptionsOpen
+        })
     }
 
     function updateStatus(element, status) {
@@ -113,7 +171,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     function updateShotStatus(ready) {
         const shotReadyText = document.querySelector('.shot-status')
-        console.log('in', shotReadyText)
         if (ready) {
             shotReadyText.innerHTML = 'Ready For Shot  💣'
 

@@ -1,10 +1,4 @@
-const { contextBridge, ipcRenderer } = require('electron')
-
-const { localIP } = require('./helpers/helpers.js')
-
-contextBridge.exposeInMainWorld('mainAPI', {
-    localIP,
-})
+const { ipcRenderer } = require('electron')
 
 const windowLoaded = new Promise((resolve) => {
     window.onload = resolve

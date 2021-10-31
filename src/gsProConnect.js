@@ -27,13 +27,11 @@ class GsProConnect {
             message: 'Trying to connect to GSPro...',
         })
 
-        this.socket = net.createConnection(
-            {
-                address: ENV.IP_ADDRESS,
-                port: ENV.PORT,
-            }
-        )
-        this.socket.setTimeout(5000);
+        this.socket = net.createConnection({
+            address: ENV.IP_ADDRESS,
+            port: ENV.PORT,
+        })
+        this.socket.setTimeout(5000)
 
         this.socket.on('timeout', () => {
             this.ipcPort.postMessage({
@@ -108,7 +106,7 @@ class GsProConnect {
 
         this.socket.on('close', (hadError) => {
             console.log('gsPro connection closed.  Had error: ', hadError)
-            if(!hadError) {
+            if (!hadError) {
                 this.handleDisconnect()
                 setTimeout(() => this.connectSocket(), TIMEOUT_MS)
             }
@@ -142,8 +140,6 @@ class GsProConnect {
                 ContainsClubData: false,
             },
         }
-
-        console.log('info', ballData, APIData)
 
         if (this.sendClubData) {
             APIData.ShotDataOptions.ContainsClubData = true

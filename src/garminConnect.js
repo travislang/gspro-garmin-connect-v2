@@ -1,5 +1,5 @@
 const net = require('net')
-const { localIP } = require('./helpers/helpers')
+const { localIP, localIPs } = require('./helpers/helpers')
 const SimMessages = require('./helpers/simMessages')
 const ENV = require('./env')
 
@@ -12,15 +12,47 @@ class GarminConnect {
         this.clubType = '7Iron'
         this.ipcPort = ipcPort
         this.gsProConnect = gsProConnect
+        this.localIP = localIP
 
         ipcPort.on('message', (event) => {
             if (event.data === 'sendTestShot') {
                 this.sendTestShot()
+            } else if (event.data && event.data.type === 'setIP') {
+                this.setNewIP(event.data.data)
             }
         })
+
+        this.ipcPort.postMessage({
+            type: 'ipOptions',
+            data: localIPs,
+        })
+        this.ipcPort.postMessage({
+            type: 'setIP',
+            data: this.localIP,
+        })
+
         ipcPort.start()
 
         this.init()
+    }
+
+    setNewIP(ip) {
+        this.ipcPort.postMessage({
+            type: 'setIP',
+            data: ip,
+        })
+
+        this.localIP = ip
+
+        this.ipcPort.postMessage({
+            type: 'R10Message',
+            message: `Switching IP to ${ip}`,
+        })
+
+        if (this.client) {
+            handleDisconnect()
+        }
+        this.listen()
     }
 
     init() {
@@ -46,8 +78,12 @@ class GarminConnect {
     }
 
     listen() {
-        this.server.close()
-        this.server.listen(ENV.GARMIN_PORT, localIP, () => {
+        if (this.server) {
+            this.server.close()
+        }
+        this.server = net.createServer()
+
+        this.server.listen(ENV.GARMIN_PORT, this.localIP, () => {
             this.ipcPort.postMessage({
                 type: 'garminStatus',
                 status: 'connecting',
@@ -207,14 +243,14 @@ class GarminConnect {
         })
         this.gsProConnect.launchBall(this.ballData, this.clubData)
 
-        if(this.client) {
+        if (this.client) {
             this.client.write(SimMessages.get_success_message('SendShot'))
             this.client.write(SimMessages.get_shot_complete_message())
             this.client.write(SimMessages.get_sim_command('Disarm'))
         }
 
         setTimeout(() => {
-            if(this.client) {
+            if (this.client) {
                 this.client.write(SimMessages.get_sim_command('Arm'))
             }
             this.ipcPort.postMessage({
