@@ -1,9 +1,9 @@
 ## About
 
 Integrates the garmin R10 with the GSPro software.
-This is open source software that is for personal use only.
+This is open source software.
 
-I am not responsible for what you use it for!
+I am not responsible for what you do with it
 
 If you find this useful I would appreciate you clicking the "star" button in the top right of this repo for me :)
 
