@@ -257,6 +257,15 @@ class GarminConnect {
     setClubData(clubData) {
         this.clubData = {
             speed: clubData.ClubHeadSpeed,
+            angleofattack: 0.0,
+            facetotarget: clubData.ClubAngleFace,
+            lie: 0.0,
+            loft: 0.0,
+            path: clubData.ClubAnglePath,
+            speedatimpact: clubData.ClubHeadSpeed,
+            verticalfaceimpact: 0.0,
+            horizontalfaceimpact: 0.0,
+            closurerate: 0.0,
         }
 
         this.ipcPort.postMessage({
