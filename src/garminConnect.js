@@ -127,6 +127,9 @@ class GarminConnect {
 
     handleDisconnect() {
         this.client.end()
+        if (this.intervalID) {
+            clearInterval(this.intervalID)
+        }
         this.client = null
         this.ipcPort.postMessage({
             type: 'garminStatus',
@@ -150,23 +153,35 @@ class GarminConnect {
     sendPing() {
         this.pingTimeout = true
 
-        this.client.write(SimMessages.get_sim_command('Ping'))
+        if (this.client) {
 
-        setTimeout(() => {
-            if (this.pingTimeout === true) {
-                this.ipcPort.postMessage({
-                    type: 'R10Message',
-                    message: 'R10 stopped responding...',
-                    level: 'error',
-                })
-                if (this.intervalID) {
-                    clearInterval(this.intervalID)
+            this.client.write(SimMessages.get_sim_command('Ping'))
+    
+            setTimeout(() => {
+                if (this.pingTimeout === true) {
+                    this.ipcPort.postMessage({
+                        type: 'R10Message',
+                        message: 'R10 stopped responding...',
+                        level: 'error',
+                    })
+                    if (this.intervalID) {
+                        clearInterval(this.intervalID)
+                    }
+                    this.handleDisconnect()
+                    this.listen()
+                } else {
                 }
-                this.handleDisconnect()
-                this.listen()
-            } else {
-            }
-        }, 3000)
+            }, 3000)
+        }
+        else {
+        this.ipcPort.postMessage({
+            type: 'R10Message',
+            message: 'R10 client connection not valid in Timeout...',
+            level: 'error',
+        })
+        clearInterval(this.intervalID)
+        this.listen()
+        }
     }
 
     handleConnection(conn) {
@@ -227,6 +242,18 @@ class GarminConnect {
             totalSpin: 2350.2,
             hla: 0.0,
             vla: 13.5,
+        }
+        this.clubData = {
+            	speed: 75.5,
+		        angleofattack: 0.0,
+                facetotarget: -2.0,
+                lie: 0.0,
+                loft: 0.0,
+                path: 1.0,
+                speedatimpact: 75.5,
+                verticalfaceimpact: 0.0,
+                horizontalfaceimpact: 0.0,
+                closurerate: 0.0,
         }
 
         this.sendShot()
