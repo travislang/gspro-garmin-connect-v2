@@ -172,7 +172,6 @@ class GarminConnect {
                     }
                     this.handleDisconnect();
                     this.listen();
-                } else {
                 }
             }, 3000);
         } else {
