@@ -87,6 +87,3 @@ typings/
 
 # Electron-Forge
 out/
-
-#prettier
-.prettierrc
