@@ -13,7 +13,7 @@ If you find this useful I would appreciate you clicking the "star" button in the
 
 Go to the [releases page](https://github.com/travislang/gspro-garmin-connect-v2/releases)
 
-Download the file `gspro-r10-connect.zip` from the assets sectionof the most recent release - currently `v1.2.1`
+Download the file `gspro-r10-connect.zip` from the assets section of the most recent release - currently `v1.3.5`
 
 Extract the contents of the zip file and open the folder.  You will only need to use the `r10-connect.exe` file so you can add a shortcut to your desktop to make future access easier.
 
