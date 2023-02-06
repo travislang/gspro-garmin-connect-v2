@@ -52,6 +52,6 @@ If the garmin app on your phone tells you that it has disconnected from E6 click
 
 If you can't get the program to connect to the R10 make sure your phone is on the same wifi as your PC that is running GSPro.
 
-Make sure your firewall settings are off on your PC or whitelist the port you are using because firewalls will usually block the connection.
+#### Make sure your firewall settings are off on your PC or whitelist the port you are using because firewalls will usually block the connection.
 
 If none of that works you may have to change the IP address the program is using to a different one.  To do this click the 'wrench' icon next to the IP number and it will open an options box.  If there is more than one IP address option click a different one and try the above steps with that one.
